@@ -3,7 +3,9 @@ import { google } from "googleapis";
 import path from "path";
 import { fileURLToPath } from "url";
 import { Buffer } from "buffer";
-import fs from "fs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,13 +14,11 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.static("public"));
 
-// Load credentials from credentials.json
-const credentials = JSON.parse(fs.readFileSync("credentials.json"));
-
+// 🔑 Use environment variables instead of credentials.json
 const oauth2Client = new google.auth.OAuth2(
-  credentials.installed.client_id,
-  credentials.installed.client_secret,
-  credentials.installed.redirect_uris[0]
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
 );
 
 app.get("/", (req, res) => {
